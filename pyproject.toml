@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "ai-project-breakdown"
+version = "0.1.0"
+description = ""
+authors = ["Andrew Docherty <docherty@gmail.com>"]
+license = "GPL-3"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+streamlit = "^1.41.1"
+requests = "^2.32.3"
+langchain = "^0.3.14"
+langchain-anthropic = "^0.3.1"
+notion-client = "^2.3.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
