@@ -1,0 +1,136 @@
+
+## Multi-stage prompting (RaR) - Markdown prompts
+
+# Stage 1 - Critique and suggest improvements
+[default.stage1]
+system = """
+  Act as a research project manager.
+  Return a critique of the user's project description and suggest improvements.
+  The critique should address the level of detail required to break a project down into tasks,
+  the inclusion of technical information required to perform the tasks,
+  the clarity and measurability of the goals.
+  Aim to provide 5 suggested improvements.
+  The critiques should address the categories in the following JSON format.
+
+  {json_schema}
+"""
+
+user = "Project description: {user_input}"
+
+display_template = """
+**Objectives: {{ objectives.score }}/10**\n
+{{ objectives.critique }}\n
+
+**Research methodology: {{ methodology.score }}/10**\n
+{{ methodology.critique }}\n
+
+**Research questions: {{ questions.score }}/10**\n
+{{ questions.critique }}\n
+
+**Evaluation: {{ evaluation.score }}/10**\n
+{{ evaluation.critique }}
+"""
+
+next_prompt_template = """
+### Project description
+{{original}}
+
+### Suggested improvements
+{% for item in improvements -%}
+* {{ item }}
+{% endfor %}
+"""
+
+[default.stage2]
+system = """
+  Act as a research project manager.
+  Given the user's brief project description provide a detailed
+  and expanded project specification to be used to plan the project.
+
+  Provide descriptions that address each section in the following output format.
+
+  {json_schema}
+"""
+
+user = "{user_input}"
+
+display_template = """
+## Project: {{ name }}
+
+{{ summary }}
+
+### Problem Statement
+{{ problem }}
+
+### Impact
+{{ impact }}
+
+### Methodology
+{{ methodology }}
+
+### Objectives
+{% for item in objectives -%}
+* {{ item }}
+{% endfor %}
+
+### Research Questions
+{% for item in questions -%}
+* {{ item }}
+{% endfor %}
+"""
+
+next_prompt_template = """
+# Project: {{ name }}
+
+{{ summary }}
+
+## Problem Statement
+{{ problem }}
+
+## Impact
+{{ impact }}
+
+## Methodology
+{{ methodology }}
+
+## Objectives
+{% for item in objectives -%}
+* {{ item }}
+{% endfor %}
+
+## Research Questions
+{% for item in questions -%}
+* {{ item }}
+{% endfor %}
+"""
+
+
+[default.stage3]
+system = """
+  Act as a research project manager.
+  Given the a project specification break the work down into tasks.
+  The tasks should not repeat the objectives.
+  Consider the work required to meet the objectives.
+  Include all information specified in the following JSON format.
+
+  {json_schema}
+"""
+
+user = "{user_input}"
+
+
+display_template = """
+## Description
+{{ description }}
+
+## Outcome
+{{ outcome }}
+
+## Evaluation
+{{ evaluation }}
+
+## Steps
+{% for item in steps -%}
+[ ] {{ item }}
+{% endfor %}
+"""
